@@ -17,10 +17,15 @@ export interface Product {
   featured: boolean;
   bestseller: boolean;
   new: boolean;
-  imageColor: string; // CSS gradient for placeholder image
+  /** CSS gradients simulating different photography angles: flat, detail, draped, worn */
+  gallery: string[];
+  imageColor: string; // first gallery item — kept for ProductCard
   imageAlt: string;
   dimensions: string;
   careInstructions: string;
+  stockCount: number;
+  tags: string[];
+  sizes?: string[];
 }
 
 export const necklaces: Product[] = [
@@ -42,11 +47,19 @@ export const necklaces: Product[] = [
     featured: true,
     bestseller: true,
     new: false,
+    gallery: [
+      "linear-gradient(135deg, #D4B483 0%, #9A7A42 50%, #C9A870 100%)",
+      "linear-gradient(160deg, #E0C070 0%, #B8975A 45%, #8B6B30 100%)",
+      "linear-gradient(110deg, #C9A870 0%, #D4B483 40%, #9A7A42 100%)",
+      "linear-gradient(145deg, #8B6B30 0%, #C9A870 55%, #E8D090 100%)",
+    ],
     imageColor: "linear-gradient(135deg, #D4B483 0%, #9A7A42 50%, #C9A870 100%)",
     imageAlt: "Geometric gold hexagonal pendant on recycled gold chain",
     dimensions: "Pendant: 18mm × 18mm. Chain length: 45cm (adjustable to 40cm).",
     careInstructions:
       "Store in the provided linen pouch. Clean gently with a soft cloth. Avoid contact with perfumes and chlorine.",
+    stockCount: 3,
+    tags: ["recycled gold", "geometric", "pendant", "modern", "18k gold"],
   },
   {
     id: "nc-002",
@@ -70,11 +83,19 @@ export const necklaces: Product[] = [
     featured: true,
     bestseller: false,
     new: false,
+    gallery: [
+      "linear-gradient(135deg, #C0C8C0 0%, #2A3D35 60%, #3D5749 100%)",
+      "linear-gradient(155deg, #3D5749 0%, #C0C8C0 50%, #A8B8A8 100%)",
+      "linear-gradient(115deg, #2A3D35 0%, #90A890 45%, #C0C8C0 100%)",
+      "linear-gradient(140deg, #A8B8A8 0%, #2A3D35 55%, #3D5749 100%)",
+    ],
     imageColor: "linear-gradient(135deg, #C0C8C0 0%, #2A3D35 60%, #3D5749 100%)",
     imageAlt: "Silver necklace with green tourmaline pendant",
     dimensions: "Stone: approx. 8mm oval. Chain: adjustable 40–48cm.",
     careInstructions:
       "Polish silver with a soft cloth. Store separately to avoid scratching. Avoid contact with water.",
+    stockCount: 5,
+    tags: ["silver", "tourmaline", "gemstone", "timeless", "ethical stones"],
   },
   {
     id: "nc-003",
@@ -95,11 +116,19 @@ export const necklaces: Product[] = [
     featured: false,
     bestseller: true,
     new: false,
+    gallery: [
+      "linear-gradient(135deg, #E8D5A0 0%, #B8975A 60%, #8B6B30 100%)",
+      "linear-gradient(155deg, #C9A558 0%, #E8D5A0 50%, #9A7A42 100%)",
+      "linear-gradient(115deg, #8B6B30 0%, #D4B070 50%, #E8D5A0 100%)",
+      "linear-gradient(145deg, #E8D5A0 0%, #8B6B30 60%, #C9A870 100%)",
+    ],
     imageColor: "linear-gradient(135deg, #E8D5A0 0%, #B8975A 60%, #8B6B30 100%)",
     imageAlt: "Hand-hammered crescent moon gold necklace on delicate chain",
     dimensions: "Moon: 28mm × 12mm. Chain: 42cm fixed.",
     careInstructions:
       "Buff gently with a polishing cloth to restore shine. Store in the provided pouch.",
+    stockCount: 2,
+    tags: ["moon", "crescent", "hammered gold", "timeless", "14k gold", "sale"],
   },
   {
     id: "nc-004",
@@ -119,11 +148,19 @@ export const necklaces: Product[] = [
     featured: false,
     bestseller: false,
     new: true,
+    gallery: [
+      "linear-gradient(135deg, #E0DDD8 0%, #B0ABA5 50%, #D8D4CE 100%)",
+      "linear-gradient(160deg, #D8D4CE 0%, #E8E5E0 50%, #A8A4A0 100%)",
+      "linear-gradient(110deg, #B0ABA5 0%, #D8D4CE 40%, #E8E5E2 100%)",
+      "linear-gradient(145deg, #C8C4C0 0%, #E0DDD8 55%, #A0A0A0 100%)",
+    ],
     imageColor: "linear-gradient(135deg, #E0DDD8 0%, #B0ABA5 50%, #D8D4CE 100%)",
     imageAlt: "Minimalist white gold bar necklace on adjustable chain",
     dimensions: "Bar: 35mm × 3mm. Chain: adjustable 38–45cm.",
     careInstructions:
       "Wipe with a soft dry cloth. Rhodium plating may need re-application after sustained wear.",
+    stockCount: 7,
+    tags: ["bar necklace", "minimalist", "white gold", "modern", "new arrival"],
   },
   {
     id: "nc-005",
@@ -143,11 +180,19 @@ export const necklaces: Product[] = [
     featured: true,
     bestseller: false,
     new: true,
+    gallery: [
+      "linear-gradient(135deg, #E8C4B8 0%, #C4948A 50%, #D4A898 100%)",
+      "linear-gradient(155deg, #D4A898 0%, #F0D8D0 50%, #C08880 100%)",
+      "linear-gradient(115deg, #C4948A 0%, #E8C4B8 45%, #F0D0C8 100%)",
+      "linear-gradient(145deg, #F0D8D0 0%, #C4948A 55%, #E8C4B8 100%)",
+    ],
     imageColor: "linear-gradient(135deg, #E8C4B8 0%, #C4948A 50%, #D4A898 100%)",
     imageAlt: "Rose gold floral pendant with pink rose quartz centre stone",
     dimensions: "Pendant: 22mm diameter. Chain: 40cm.",
     careInstructions:
       "Rose quartz is sensitive to prolonged sunlight — store away from direct light.",
+    stockCount: 4,
+    tags: ["floral", "rose quartz", "rose gold", "botanical", "new arrival", "timeless"],
   },
   {
     id: "nc-006",
@@ -161,17 +206,28 @@ export const necklaces: Product[] = [
       "Three strands of fine recycled gold wire, braided by hand — wearable artisanship in its purest form.",
     longDescription:
       "The Roots Chain is a masterclass in the craft of chainmaking. Three fine strands of recycled 18k yellow gold wire are braided by hand by our senior jeweller, a technique requiring hours of patient, precise work. The resulting chain is supple and lustrous, worn alone as a statement or layered with other pieces from the collection.",
-    materials: ["18k Recycled Yellow Gold — 3-strand hand-braided", "Length: 50cm with lobster clasp"],
+    materials: [
+      "18k Recycled Yellow Gold — 3-strand hand-braided",
+      "Length: 50cm with lobster clasp",
+    ],
     sustainabilityNote:
       "Every metre of gold wire used is from recycled industrial sources. Zero-waste production.",
     featured: false,
     bestseller: true,
     new: false,
+    gallery: [
+      "linear-gradient(135deg, #C9A870 0%, #B8975A 40%, #E0C890 100%)",
+      "linear-gradient(155deg, #E0C890 0%, #C9A870 50%, #9A7840 100%)",
+      "linear-gradient(115deg, #B8975A 0%, #E0C890 45%, #C9A870 100%)",
+      "linear-gradient(145deg, #9A7840 0%, #D4B070 55%, #E0C890 100%)",
+    ],
     imageColor: "linear-gradient(135deg, #C9A870 0%, #B8975A 40%, #E0C890 100%)",
     imageAlt: "Hand-braided three-strand recycled gold chain necklace",
     dimensions: "Chain width: 4mm. Length: 50cm.",
     careInstructions:
       "Unclip the clasp before storage and lay flat to maintain the braid structure.",
+    stockCount: 1,
+    tags: ["chain", "braided", "18k gold", "modern", "statement"],
   },
 ];
 
@@ -194,11 +250,19 @@ export const bracelets: Product[] = [
     featured: true,
     bestseller: true,
     new: false,
+    gallery: [
+      "linear-gradient(135deg, #C9A870 0%, #8B6B30 50%, #D4B483 100%)",
+      "linear-gradient(155deg, #D4B483 0%, #C9A870 50%, #7A5820 100%)",
+      "linear-gradient(115deg, #8B6B30 0%, #D4B483 45%, #C9A870 100%)",
+      "linear-gradient(145deg, #C9A870 0%, #7A5820 55%, #E0C880 100%)",
+    ],
     imageColor: "linear-gradient(135deg, #C9A870 0%, #8B6B30 50%, #D4B483 100%)",
     imageAlt: "Hand-woven sculptural recycled gold wire cuff bracelet",
     dimensions: "Width: 20mm. Inner diameter: 60mm (adjustable). Opening: 25mm.",
     careInstructions:
       "Handle with care to preserve weave structure. Store flat in the provided box.",
+    stockCount: 1,
+    tags: ["cuff", "woven", "18k gold", "sculptural", "made to order", "modern"],
   },
   {
     id: "br-002",
@@ -218,11 +282,19 @@ export const bracelets: Product[] = [
     featured: false,
     bestseller: true,
     new: false,
+    gallery: [
+      "linear-gradient(135deg, #D4D0CC 0%, #9A9690 50%, #C0BCBA 100%)",
+      "linear-gradient(155deg, #C0BCBA 0%, #D4D0CC 50%, #8A8680 100%)",
+      "linear-gradient(115deg, #9A9690 0%, #C8C4C0 50%, #D4D0CC 100%)",
+      "linear-gradient(145deg, #D4D0CC 0%, #8A8680 55%, #C8C8C8 100%)",
+    ],
     imageColor: "linear-gradient(135deg, #D4D0CC 0%, #9A9690 50%, #C0BCBA 100%)",
     imageAlt: "Sterling silver bracelet with hand-tumbled oval links",
     dimensions: "Link size: 14mm × 10mm. Total length: 19cm. Toggle adds 2cm.",
     careInstructions:
       "Silver will develop a natural patina over time that can be buffed away with a polishing cloth if desired.",
+    stockCount: 6,
+    tags: ["silver", "links", "organic", "timeless", "toggle clasp"],
   },
   {
     id: "br-003",
@@ -248,11 +320,20 @@ export const bracelets: Product[] = [
     featured: true,
     bestseller: false,
     new: true,
+    gallery: [
+      "linear-gradient(135deg, #C9A870 0%, #E0DDD8 33%, #E8C4B8 66%, #B8975A 100%)",
+      "linear-gradient(155deg, #E8C4B8 0%, #C9A870 33%, #E0DDD8 66%, #D4B483 100%)",
+      "linear-gradient(115deg, #E0DDD8 0%, #E8C4B8 33%, #C9A870 66%, #9A7A42 100%)",
+      "linear-gradient(145deg, #B8975A 0%, #E0DDD8 33%, #E8C4B8 66%, #C9A870 100%)",
+    ],
     imageColor: "linear-gradient(135deg, #C9A870 0%, #E0DDD8 33%, #E8C4B8 66%, #B8975A 100%)",
     imageAlt: "Three-piece stacking bracelet set in yellow, white, and rose gold",
     dimensions: "Each arc: width 3mm, inner circumference 19cm.",
     careInstructions:
       "Store each arc separately to avoid cross-metal scratching.",
+    stockCount: 4,
+    tags: ["stacking", "set", "mixed metal", "14k gold", "modern", "new arrival", "sale"],
+    sizes: ["XS (17cm)", "S (18cm)", "M (19cm)", "L (20cm)"],
   },
   {
     id: "br-004",
@@ -276,11 +357,19 @@ export const bracelets: Product[] = [
     featured: false,
     bestseller: false,
     new: false,
+    gallery: [
+      "linear-gradient(135deg, #D4B483 0%, #2A3D35 50%, #B8975A 100%)",
+      "linear-gradient(155deg, #B8975A 0%, #D4B483 50%, #1A2820 100%)",
+      "linear-gradient(115deg, #2A3D35 0%, #C9A870 45%, #D4B483 100%)",
+      "linear-gradient(145deg, #D4B483 0%, #1A2820 55%, #B8975A 100%)",
+    ],
     imageColor: "linear-gradient(135deg, #D4B483 0%, #2A3D35 50%, #B8975A 100%)",
     imageAlt: "Vine-inspired gold wrap bracelet with leaf details",
     dimensions: "Total length: 38cm. Suitable for wrists 14–18cm circumference.",
     careInstructions:
       "Gently re-shape leaves if bent. The organic form naturally evolves with wear.",
+    stockCount: 5,
+    tags: ["wrap", "botanical", "vine", "14k gold", "adjustable", "timeless"],
   },
   {
     id: "br-005",
@@ -294,18 +383,30 @@ export const bracelets: Product[] = [
       "Bold, architectural, deliberate — a recycled silver bangle with hand-applied raw texture.",
     longDescription:
       "The Slab Bangle takes its cues from the raw beauty of cut stone. A thick, flat band of recycled sterling silver is hammered along one face to create an irregular, geological texture, while the inner surface is polished smooth for comfort. This is a statement piece for those who appreciate confident, sculptural jewellery with a material honesty.",
-    materials: ["Recycled Sterling Silver", "Width: 8mm slab band", "Solid construction — no clasp"],
+    materials: [
+      "Recycled Sterling Silver",
+      "Width: 8mm slab band",
+      "Solid construction — no clasp",
+    ],
     sustainabilityNote:
       "Solid sterling silver — no hollow construction, no plating, no compromise.",
     featured: false,
     bestseller: false,
     new: false,
+    gallery: [
+      "linear-gradient(135deg, #C8C4C0 0%, #8C8680 50%, #E0DCDA 100%)",
+      "linear-gradient(155deg, #E0DCDA 0%, #C8C4C0 50%, #787470 100%)",
+      "linear-gradient(115deg, #8C8680 0%, #D8D4D0 45%, #C8C4C0 100%)",
+      "linear-gradient(145deg, #C8C4C0 0%, #787470 55%, #E0DCDA 100%)",
+    ],
     imageColor: "linear-gradient(135deg, #C8C4C0 0%, #8C8680 50%, #E0DCDA 100%)",
     imageAlt: "Textured recycled sterling silver wide band bangle",
-    dimensions:
-      "Width: 8mm. Available in inner diameters: S (56mm), M (60mm), L (64mm).",
+    dimensions: "Width: 8mm. Available in inner diameters: S (56mm), M (60mm), L (64mm).",
     careInstructions:
       "Texture may collect oils — clean with a soft toothbrush and mild soap. Rinse and dry immediately.",
+    stockCount: 8,
+    tags: ["bangle", "silver", "textured", "architectural", "modern"],
+    sizes: ["S (56mm)", "M (60mm)", "L (64mm)"],
   },
   {
     id: "br-006",
@@ -319,17 +420,29 @@ export const bracelets: Product[] = [
       "An ancient symbol rendered in recycled gold — interlocking knot links that speak of continuity and care.",
     longDescription:
       "The Knot Bracelet reimagines the Celtic eternal knot for contemporary wear. Each of the seven links is individually cast from recycled 18k yellow gold and polished to a warm lustre. The interconnected design is not only beautiful but structurally clever — each link passes through the next, making the bracelet flex naturally with every gesture.",
-    materials: ["18k Recycled Yellow Gold", "7 cast knot links", "Box clasp with safety catch"],
+    materials: [
+      "18k Recycled Yellow Gold",
+      "7 cast knot links",
+      "Box clasp with safety catch",
+    ],
     sustainabilityNote:
       "Cast using recycled gold certified by RJC (Responsible Jewellery Council).",
     featured: true,
     bestseller: false,
     new: false,
+    gallery: [
+      "linear-gradient(135deg, #D4B483 0%, #9A7A42 40%, #C9A870 100%)",
+      "linear-gradient(155deg, #C9A870 0%, #D4B483 45%, #8A6A30 100%)",
+      "linear-gradient(115deg, #9A7A42 0%, #E0C880 45%, #D4B483 100%)",
+      "linear-gradient(145deg, #D4B483 0%, #8A6A30 55%, #C9A870 100%)",
+    ],
     imageColor: "linear-gradient(135deg, #D4B483 0%, #9A7A42 40%, #C9A870 100%)",
     imageAlt: "Celtic-inspired knot link bracelet in recycled 18k gold",
     dimensions: "Link size: 12mm × 12mm. Total length: 18cm.",
     careInstructions:
       "Clean in warm soapy water with a soft brush. Box clasp has a safety catch — press both sides to open.",
+    stockCount: 3,
+    tags: ["knot", "celtic", "18k gold", "links", "timeless", "RJC certified"],
   },
 ];
 

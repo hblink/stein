@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useMemo } from 'react'
 import { Order, OrderItem } from '@/types/order'
-import { supabase } from '@/lib/supabase'
+import { getSupabase } from '@/lib/supabase'
 import { OrdersTable } from '@/components/OrdersTable'
 import { OrderCard } from '@/components/OrderCard'
 import { OrderDetailsModal } from '@/components/OrderDetailsModal'
@@ -34,7 +34,7 @@ export default function OrdersPage() {
       setLoading(true)
       setError(null)
 
-      const { data, error: supabaseError } = await supabase
+      const { data, error: supabaseError } = await getSupabase()
         .from('orders')
         .select('*')
         .order('created_at', { ascending: false })
@@ -42,7 +42,7 @@ export default function OrdersPage() {
       if (supabaseError) throw supabaseError
 
       const ordersWithItems = await Promise.all(
-        (data || []).map(async (order) => {
+        (data || []).map(async (order: any) => {
           const items = await fetchOrderItems(order.id)
           return {
             id: order.id,
@@ -88,14 +88,14 @@ export default function OrdersPage() {
 
   const fetchOrderItems = async (orderId: string): Promise<OrderItem[]> => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from('order_items')
         .select('*')
         .eq('order_id', orderId)
 
       if (error) throw error
 
-      return (data || []).map(item => ({
+      return (data || []).map((item: any) => ({
         id: item.id,
         orderId: item.order_id,
         productId: item.product_id || '',

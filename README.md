@@ -76,6 +76,9 @@ src/
 │   ├── globals.css             # Global styles & theme
 │   ├── orders/
 │   │   └── page.tsx            # Order dashboard (NEW)
+│   ├── admin/
+│   │   └── products/            # Product management (NEW)
+│   │       └── page.tsx
 │   └── collections/
 │       ├── necklaces/
 │       │   └── [slug]/
@@ -95,234 +98,79 @@ src/
 │   └── ...                     # Other components
 ├── lib/
 │   └── supabase.ts             # Supabase client (NEW)
-└── types/
-    └── order.ts                # Order type definitions (NEW)
+├── types/
+│   └── order.ts                # Order type definitions (NEW)
+└── data/
+    └── products.ts             # Product data (legacy - use DB now)
 ```
 
-## 🎨 Managing Product Images
+## 🛠️ Admin Panel (Easy Product Management)
 
-### Current Setup: CSS Gradient Placeholders
+**No coding needed!** Manage products through a web interface:
 
-Products currently use CSS gradient placeholders representing different photography angles:
+1. Navigate to `/admin/products` in your browser (when logged in/authenticated)
+2. **Add Product** — Click "Add Product" and fill the form
+3. **Edit** — Click ✏️ on any product
+4. **Delete** — Click 🗑️ to remove
 
-- **Studio**: Primary product shot (flat lay)
-- **Detail**: Close-up of clasp, texture, or stone
-- **Styled**: Product in context/environment
-- **Worn**: On-body lifestyle shot
+### What You Can Change
 
-Each product has a `gallery` array with 4 CSS gradients in `src/data/products.ts`.
+- ✏️ **Name & Description** — Product titles and details
+- 💰 **Pricing** — Regular price and original price (for showing discounts)
+- 📦 **Stock** — Current inventory count
+- 🖼️ **Images** — URLs for 4 views (Studio, Detail, Styled, Worn)
+- 🏷️ **Tags** — Filterable tags (e.g., "Gold", "Gemstone")
+- 📏 **Sizes** — Available sizes for bracelets
+- ⭐ **Badges** — "New Arrival" / "Bestseller" toggles
+- 🔘 **Active** — Show/hide from storefront
+- 🔢 **Sort Order** — Display sequence (lower = first)
 
-### Adding Real Product Photography
+### Changes Are Instant
 
-To replace gradient placeholders with real images:
+All edits save directly to Supabase and appear immediately on the site. No rebuild needed!
 
-1. **Update the Product type** (optional):
-   ```typescript
-   // Remove gallery gradients, add image URLs
-   gallery: string[]; // Now real image URLs instead of CSS gradients
-   ```
+## 🖼️ Adding Real Product Photos
 
-2. **Upload images** to your preferred CDN or use Next.js `public/` folder:
-   ```
-   public/images/products/
-   ├── necklace-golden-harmony/
-   │   ├── studio.jpg
-   │   ├── detail.jpg
-   │   ├── styled.jpg
-   │   └── worn.jpg
-   ```
+Currently uses CSS gradient placeholders. To add real photos:
 
-3. **Replace gradient with Image component** in `ProductDetailPage.tsx`:
-   ```typescript
-   import Image from 'next/image'
-   
-   // In gallery section:
-   <Image
-     src={product.gallery[activeImage]}
-     alt={`${product.name} - ${viewLabels[activeImage]}`}
-     fill
-     className="object-cover"
-     priority={activeImage === 0}
-   />
-   ```
+1. **Upload images** to your CDN or cloud storage (Cloudinary, AWS S3, Imgix, etc.)
+2. **Get the URLs** (e.g., `https://cdn.example.com/ring-gold-studio.jpg`)
+3. **In the Admin Panel** (`/admin/products`), paste URLs into the 4 image fields:
+   - Studio (main product shot)
+   - Detail (close-up)
+   - Styled (lifestyle)
+   - Worn (on-body)
+4. **Save** — Changes appear immediately!
 
-4. **Update ProductCard** similarly for thumbnail images.
-
-### Image Specifications
-
-- **Aspect Ratio**: 4:5 for detail pages, 3:4 for cards
-- **Formats**: WebP or AVIF (optimized), with JPG fallback
-- **Sizes**: 
-  - Main/detail images: 800×1000px (2x for retina)
-  - Thumbnail images: 400×500px
-- **Naming convention**: `product-name-view.jpg` (e.g., `golden-harmony-studio.jpg`)
+### Image Specs
+- **Aspect Ratio**: 4:5 (portrait)
+- **Size**: 800×1000px recommended (2x for retina)
+- **Format**: WebP/JPG/PNG
+- **Naming**: `product-name-view.jpg` (e.g., `golden-harmony-studio.jpg`)
 
 ## 💰 Managing Product Pricing
 
-Product data is defined in `src/data/products.ts`:
+Use the **Admin Panel** (`/admin/products`) to change prices:
 
-```typescript
-{
-  id: '1',
-  name: 'Golden Harmony Necklace',
-  price: 285,              // Current price in GBP
-  originalPrice: 310,      // Optional: for sale pricing
-  category: 'necklaces',
-  collection: 'modern',
-  stockCount: 3,
-  images: [...],
-  description: '...',
-  tags: ['18k Gold', 'New Arrival'],
-  sizes: undefined,        // Optional for size variants
-}
-```
+1. Go to `/admin/products`
+2. Click ✏️ on the product
+3. Edit the **Price** field
+4. Click **Save Changes**
+5. Done! The new price appears instantly on the live site
 
-### To update pricing:
+No editing code or rebuilding required!
 
-1. **Edit `src/data/products.ts`**
-2. **Update the `price` field** for the target product
-3. **Add `originalPrice`** if the product is on sale (strikethrough will display)
-4. **Sale badge**: Products with `originalPrice` automatically show "Sale" badge
+## 🗄️ Database Schema
 
-### Adding a New Product
+### Orders Table
+The `supabase/orders_schema.sql` file contains the complete schema for order management:
+- `orders` table with financial, status, and tracking fields
+- `order_items` table for line items
+- Row Level Security (RLS) policies
+- Sample data included
 
-1. Create image gradients (or real images) for the 4 views
-2. Add product entry to `products.ts`:
-   ```typescript
-   {
-     id: 'unique-id',
-     name: 'Product Name',
-     description: 'Short description',
-     price: 195,
-     originalPrice: null,  // or number for sales
-     category: 'necklaces', // or 'bracelets'
-     collection: 'timeless', // or 'modern'
-     stockCount: 5,
-     gallery: [gradient1, gradient2, gradient3, gradient4],
-     imageColor: gradient1,  // for card background
-     tags: ['Tag 1', 'Tag 2'],
-     sizes: undefined,  // or ['S', 'M', 'L'] for size variants
-   }
-   ```
-
-3. **Generate static params** (if using dynamic routes):
-   The app already has `generateStaticParams` in collection pages — update the slug list if adding new products.
-
-4. **Rebuild**:
-   ```bash
-   bun build
-   ```
-
-## 🗄️ Supabase & Order Management
-
-### Configuration
-
-The Supabase client is configured in `src/lib/supabase.ts`:
-
-```typescript
-import { createClient } from '@supabase/supabase-js'
-
-export const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
-export const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
-```
-
-Set your credentials in `.env.local`:
-```env
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-```
-
-### Database Schema
-
-The `supabase/orders_schema.sql` file contains the complete schema for:
-
-- **`orders` table**: Customer orders with financial, status, and tracking fields
-- **`order_items` table**: Individual line items for each order
-
-#### Key Fields:
-
-**orders table:**
-- `order_number` (text) - Unique order identifier (e.g., ORD-2026-001)
-- `customer_id` (uuid) - References Supabase auth users
-- `email` (text) - Customer email
-- `subtotal`, `tax`, `shipping`, `discount`, `total` (numeric) - Financial breakdown
-- `order_status` (text) - pending | processing | shipped | delivered | cancelled
-- `payment_status` (text) - pending | paid | failed | refunded
-- `fulfillment_status` (text) - unfulfilled | partial | fulfilled | cancelled
-- `shipping_address` (jsonb) - Customer shipping address
-- `billing_address` (jsonb) - Billing address
-- `tracking_number` (text) - Carrier tracking number
-- `estimated_delivery` (date) - Expected delivery date
-
-**order_items table:**
-- `order_id` (uuid) - References orders.id
-- `product_id` (uuid) - References products table
-- `product_name` (text) - Product name at time of purchase
-- `quantity` (integer) - Quantity ordered
-- `unit_price` (numeric) - Price per unit
-- `total_price` (numeric) - Quantity × unit price
-- `image_url` (text) - Product image URL
-
-### Setting Up the Database
-
-1. **Access Supabase Dashboard**
-   - Go to your Supabase project
-   - Navigate to **SQL Editor**
-
-2. **Run the Schema SQL**
-   - Open `supabase/orders_schema.sql`
-   - Paste into SQL Editor and run
-   - Or use the Supabase CLI:
-     ```bash
-     bunx supabase db push
-     ```
-
-3. **Enable Row Level Security (RLS)**
-   - RLS is enabled by default in the schema
-   - Adjust policies in Supabase dashboard as needed
-
-4. **Insert Sample Data**
-   - The SQL file includes 4 sample orders with items
-   - Remove or modify as needed
-
-### Accessing Orders Data
-
-The order dashboard (`/orders`) automatically fetches and displays orders from your Supabase database:
-
-```typescript
-const { data, error } = await supabase
-  .from('orders')
-  .select('*')
-  .order('created_at', { ascending: false })
-```
-
-### Order Status Flow
-
-```
-Pending → Processing → Shipped → Delivered
-    ↓
-Cancelled (at any stage)
-```
-
-- **Payment Status**: pending → paid (or failed/refunded)
-- **Fulfillment**: unfulfilled → partial → fulfilled (or cancelled)
-
-## 🛠️ Available Scripts
-
-```bash
-# Development
-bun dev              # Start dev server
-
-# Build & Production
-bun build            # Build for production
-bun start            # Start production server
-
-# Linting & Type Checking
-bun lint             # Run ESLint
-bun typecheck        # Run TypeScript compiler
-```
+### Products Table
+The `supabase/products_schema.sql` file contains schema for the products table compatible with the Admin Panel.
 
 ## 🎨 Design System
 
@@ -342,12 +190,6 @@ Custom theme defined in `src/app/globals.css`:
 - **Body**: Inter (UI and text)
 
 Both loaded via `next/font/google` for optimal performance.
-
-### Adding New Pages
-
-1. Create page file in `src/app/` (e.g., `about/page.tsx`)
-2. Add to navigation in `src/components/Navigation.tsx`
-3. Update sitemap if using one (`app/sitemap.ts`)
 
 ## 🔧 Troubleshooting
 
@@ -384,7 +226,7 @@ Or manually review and fix reported issues.
 - For external images, configure `next.config.js` with allowed domains
 - Current gradient placeholders require no external resources
 
-## 📦 Deployment
+## 🚀 Deployment
 
 ### Vercel (Recommended)
 
@@ -408,31 +250,6 @@ Or manually review and fix reported issues.
 | `NEXT_PUBLIC_SUPABASE_URL` | Yes | Your Supabase project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Your Supabase anon/public key |
 
-## 🛠️ Admin Panel (Easy Product Management)
-
-No coding needed! Manage products through a web interface:
-
-1. **Go to `/admin/products`** in your browser (when logged in/authenticated)
-2. **Add Product** — Click "Add Product" and fill the form
-3. **Edit** — Click ✏️ on any product
-4. **Delete** — Click 🗑️ to remove
-
-### What You Can Change
-
-- ✏️ **Name & Description** — Product titles and details
-- 💰 **Pricing** — Regular and sale prices
-- 📦 **Stock** — Inventory count
-- 🖼️ **Images** — URLs for 4 views (Studio/Detail/Styled/Worn)
-- 🏷️ **Tags** — Filter badges (e.g., "Gold", "Gemstone")
-- 📏 **Sizes** — Available sizes for bracelets
-- ⭐ **Badges** — "New Arrival" / "Bestseller" toggles
-- 🔘 **Active** — Show/hide from storefront
-- 🔢 **Sort Order** — Display sequence (lower = first)
-
-### Changes Are Instant
-
-All edits save directly to Supabase and appear immediately on the site. No rebuild needed!
-
 ## 📚 Resources
 
 - [Next.js Documentation](https://nextjs.org/docs)
@@ -440,44 +257,34 @@ All edits save directly to Supabase and appear immediately on the site. No rebui
 - [Tailwind CSS Documentation](https://tailwindcss.com/docs)
 - [TypeScript Documentation](https://www.typescriptlang.org/docs/)
 
-## 🖼️ Adding Real Product Photos
+## 🛡️ Security
 
-Currently uses CSS gradient placeholders. To add real photos:
+- **Never commit secrets**: `.env.local` is in `.gitignore`
+- **Use Row Level Security (RLS)** on Supabase tables
+- **Sanitize user inputs** on all forms
+- **Validate API requests** with proper authorization
 
-1. **Upload images** to your CDN or `public/images/products/`
-2. **Get the URLs** (e.g., `https://cdn.example.com/ring-gold-studio.jpg`)
-3. **In the Admin Panel**, paste URLs into the 4 image fields:
-   - Studio (main product shot)
-   - Detail (close-up)
-   - Styled (lifestyle)
-   - Worn (on-body)
-4. **Save** — Changes appear immediately!
+## 🤝 Contributing
 
-### Image Specs
-- **Aspect Ratio**: 4:5 (portrait)
-- **Size**: 800×1000px recommended (2x for retina)
-- **Format**: WebP/JPG/PNG
-- **Naming**: `product-name-view.jpg` (e.g., `golden-harmony-studio.jpg`)
+1. Fork the repository
+2. Create feature branch: `git checkout -b feature/new-feature`
+3. Commit changes: `git commit -m 'Add new feature'`
+4. Push to branch: `git push origin feature/new-feature`
+5. Open Pull Request
 
-## 🖥️ Development: Adding Products via Code
+## 📄 License
 
-For developers, products can also be added in `src/data/products.ts`:
+This project is proprietary and confidential. Unauthorized use, copying, or distribution is prohibited.
 
-```typescript
-{
-  id: 'unique-id',
-  name: 'Product Name',
-  description: 'Full description...',
-  short_description: 'Brief description',
-  price: 285,
-  category: 'necklaces',
-  collection: 'modern',
-  stockCount: 5,
-  gallery: [gradient1, gradient2, gradient3, gradient4],
-  imageColor: gradient1,
-  tags: ['Gold', 'Gemstone'],
-  sizes: undefined,
-}
-```
+## 🆘 Support
 
-Then run `bun run build` to regenerate static pages.
+For issues, questions, or feature requests:
+- Check existing [issues](https://github.com/your-repo/issues)
+- Open a new issue with detailed description
+- Contact the development team
+
+---
+
+**Last Updated**: May 2026  
+**Version**: 1.4  
+**Built with**: ❤️ + Next.js + TypeScript + Tailwind CSS

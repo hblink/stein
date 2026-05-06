@@ -1,18 +1,19 @@
 # Product Requirements Document — Maison Aurore
 
-**Version:** 1.2  
+**Version:** 1.4  
 **Last updated:** 6 May 2026  
-**Status:** v1.2 implemented and deployed
+**Status:** v1.4 implemented and deployed
 
 ### Changelog
 
- | Version | Date | Changes |
+| Version | Date | Changes |
 |---|---|---|
 | 1.0 | May 2026 | Initial build — all pages, components, product data |
 | 1.1 | May 2026 | Bug fix: `"use client"` added to `ProductCard` (onClick handler) |
 | 1.1 | May 2026 | Bug fix: Hero section invisible before hydration — rewrote as `SlideVisual` component, added explicit `backgroundColor` on `<section>` |
 | 1.2 | May 2026 | Hero redesigned as 3-slide auto-advancing slider; Product detail page fully rebuilt with gallery, tabs, stock indicator, qty stepper, size selector, wishlist toggle, share buttons, maker bio |
 | 1.3 | May 2026 | **NEW**: Customer order dashboard with Supabase integration — order history, status tracking, estimated delivery, detailed order view, search, filter, sort, and dual view modes (table & card grid) |
+| 1.4 | May 2026 | **NEW**: Admin product management panel — no-code web interface for adding/editing products, pricing, and inventory |
 
 ---
 
@@ -93,7 +94,7 @@ The primary business goal is conversion — turning first-time visitors into pay
 Each product carries:
 - `gallery: string[]` — 4 CSS gradient placeholders (Studio, Detail, Styled, Worn views)
 - `stockCount: number` — drives stock indicator and quantity stepper cap
-- `tags: string[]` — rendered as pill badges in the Description tab
+- `tags: string[]` — rendered as pill badges in Description tab
 - `sizes?: string[]` — optional; renders size selector when present
 
 ### Collections
@@ -212,7 +213,7 @@ Two-column `[1fr 1px 1fr]` on desktop with a visible blush-coloured vertical div
 
 ---
 
-### 5.6 Order Dashboard `/orders` _(NEW: v1.3)_
+### 5.5 Order Dashboard `/orders` _(new: v1.3)_
 
 **Purpose:** Customer order history and tracking with Supabase backend  
 **Conversion goal:** Reduce customer anxiety, increase trust and repeat purchase  
@@ -238,11 +239,44 @@ Two-column `[1fr 1px 1fr]` on desktop with a visible blush-coloured vertical div
 
 ---
 
+### 5.6 Admin Product Management `/admin/products` _(new: v1.4)_
+
+**Purpose:** No-code product management for non-technical staff  
+**Conversion goal:** Enable fast product updates without developer involvement
+
+| Feature | Detail |
+|---|---|
+| **Add Product** | Fill form → Save → Live instantly |
+| **Edit Product** | Click ✏️ → Modify fields → Save → Live instantly |
+| **Delete Product** | Click 🗑️ → Confirm → Removed instantly |
+| **Pricing** | Change regular/original price, see live updates |
+| **Inventory** | Update stock count in real-time |
+| **Images** | Paste CDN URLs for 4 views (Studio/Detail/Styled/Worn) |
+| **Tags** | Add/remove filterable badges (e.g., "Gold", "Gemstone", "New") |
+| **Badges** | Toggle "New Arrival" / "Bestseller" flags |
+| **Active/Inactive** | Toggle product visibility on storefront |
+| **Sort Order** | Control display sequence (lower = first) |
+
+**Key Benefits:**
+- No coding required — simple web form
+- Changes save to Supabase and appear instantly
+- No rebuild/redeploy needed
+- Supports image uploads via CDN (Cloudinary, S3, Imgix, etc.)
+
+---
+
+### 5.7 404 Page `/not-found`
+
+**Purpose:** Brand-consistent 404 with editorial copy ("This piece has moved on") and two recovery CTAs: Return Home + Shop Collection.
+
+---
+
 ## 6. Navigation Architecture
 
 ```
 /                                    Homepage (with hero slider)
 /orders                              Order Dashboard
+/admin/products                     Product Management (Admin)
 /collections/necklaces               Necklaces collection
 /collections/bracelets               Bracelets collection
 /collections/necklaces/[slug]        Necklace product detail
@@ -298,7 +332,6 @@ Two-column `[1fr 1px 1fr]` on desktop with a visible blush-coloured vertical div
 - Product cards: hover "Add to Bag" overlay with backdrop-blur
 - Product detail: dominant "Add to Bag — £XXX×qty" with confirmed state
 - Product detail: Ask a Question secondary CTA (reduces exit intent)
-- Collection pages: bespoke CTA at bottom
 
 ---
 
@@ -324,6 +357,8 @@ Two-column `[1fr 1px 1fr]` on desktop with a visible blush-coloured vertical div
 | `ProductCard` | `onClick` on "Add to Bag" hover button |
 | `ProductDetailPage` | Gallery, tabs, qty stepper, wishlist, add-to-bag confirmed state |
 | `NewsletterSection` | Form `onSubmit`, `useState` for submission state |
+| `OrdersPage` | Real-time order data, filtering, search |
+| `AdminProductsPage` | CRUD product management |
 
 ### Performance Considerations
 - All non-interactive components remain Server Components
@@ -380,7 +415,10 @@ Each product has two description layers:
 
 ### Phase 2 — Commerce Infrastructure
 - [x] **Order Dashboard** — Customer order history with Supabase integration (v1.3)
-- [ ] Real product photography (4 angles per product — maps directly to `gallery[]` array)
+- [x] **Admin Product Panel** — No-code web interface for product management (v1.4)  
+  - Add/edit/delete products via `/admin/products`
+  - Real-time pricing, inventory, image management
+  - No rebuild/deploy needed — changes are instant
 - [ ] Shopping cart (drawer or page)
 - [ ] Checkout flow with payment processing (Stripe)
 - [ ] User accounts / order history (with authentication)
@@ -421,15 +459,12 @@ Each product has two description layers:
 
 ---
 
-## 12. Out of Scope (v1.2)
+## 12. Out of Scope (v1.4)
 
-- Shopping cart and checkout (payment processing)
-- User authentication / accounts
-- CMS / content management
 - Real-time inventory management
-- Product search functionality
+- CMS / content management
 - Third-party review platform integration
 - Live chat / support widget
-- International shipping / currency switching
-- Email automation
 - Analytics integration (GA4, Meta Pixel)
+
+---

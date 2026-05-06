@@ -21,6 +21,13 @@ export default function OrdersPage() {
   const [showFilters, setShowFilters] = useState(false)
   const [sortBy, setSortBy] = useState<'date' | 'total'>('date')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+    fetchOrders()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const fetchOrders = async () => {
     try {
@@ -79,11 +86,6 @@ export default function OrdersPage() {
     }
   }
 
-  useEffect(() => {
-    fetchOrders()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
   const fetchOrderItems = async (orderId: string): Promise<OrderItem[]> => {
     try {
       const { data, error } = await supabase
@@ -121,7 +123,6 @@ export default function OrdersPage() {
   const filteredAndSortedOrders = useMemo(() => {
     let result = [...orders]
 
-    // Search filter
     if (searchQuery) {
       const query = searchQuery.toLowerCase()
       result = result.filter(
@@ -133,17 +134,14 @@ export default function OrdersPage() {
       )
     }
 
-    // Status filter
     if (statusFilter !== 'all') {
       result = result.filter((order) => order.orderStatus === statusFilter)
     }
 
-    // Payment filter
     if (paymentFilter !== 'all') {
       result = result.filter((order) => order.paymentStatus === paymentFilter)
     }
 
-    // Sort
     result.sort((a, b) => {
       let comparison = 0
       if (sortBy === 'date') {
@@ -167,6 +165,11 @@ export default function OrdersPage() {
     }
   }, [orders])
 
+  // Don't render on server to avoid supabase errors during build
+  if (!isClient) {
+    return null
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#FAF7F2] flex items-center justify-center">
@@ -180,7 +183,6 @@ export default function OrdersPage() {
 
   return (
     <div className="min-h-screen bg-[#FAF7F2] pb-12">
-      {/* Header */}
       <div className="bg-white border-b border-slate-200 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -210,7 +212,6 @@ export default function OrdersPage() {
           </div>
         )}
 
-        {/* Stats Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
           <div className="bg-white rounded-2xl p-5 border border-slate-200">
             <div className="text-slate-500 text-sm font-medium mb-1">Total Orders</div>
@@ -236,10 +237,8 @@ export default function OrdersPage() {
           </div>
         </div>
 
-        {/* Filters Bar */}
         <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 mb-6">
           <div className="flex flex-col lg:flex-row gap-4">
-            {/* Search */}
             <div className="relative flex-1">
               <Search className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
               <input
@@ -251,7 +250,6 @@ export default function OrdersPage() {
               />
             </div>
 
-            {/* Filter Toggle */}
             <button
               onClick={() => setShowFilters(!showFilters)}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
@@ -269,7 +267,6 @@ export default function OrdersPage() {
               )}
             </button>
 
-            {/* View Toggle */}
             <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-xl">
               <button
                 onClick={() => setViewMode('table')}
@@ -296,7 +293,6 @@ export default function OrdersPage() {
             </div>
           </div>
 
-          {/* Expandable Filters */}
           {showFilters && (
             <div className="mt-4 pt-4 border-t border-slate-100 flex flex-col sm:flex-row gap-4">
               <div className="flex items-center gap-2">
@@ -352,14 +348,12 @@ export default function OrdersPage() {
           )}
         </div>
 
-        {/* Results Count */}
         <div className="flex items-center justify-between mb-4">
           <p className="text-sm text-slate-500">
             Showing {filteredAndSortedOrders.length} of {orders.length} orders
           </p>
         </div>
 
-        {/* Orders List */}
         {viewMode === 'table' ? (
           <OrdersTable orders={filteredAndSortedOrders} onViewOrder={handleViewOrder} />
         ) : (

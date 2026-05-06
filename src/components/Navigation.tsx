@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { Package } from "lucide-react";
 
 export default function Navigation() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -75,32 +76,22 @@ export default function Navigation() {
               Our Story
             </Link>
           </li>
+          <li>
+            <Link
+              href="/orders"
+              className="link-underline hover:text-[#B8975A] transition-colors duration-300 text-[13px] flex items-center gap-1.5"
+            >
+              <Package className="w-3.5 h-3.5" />
+              Orders
+            </Link>
+          </li>
         </ul>
 
         {/* Right side actions */}
         <div className="hidden md:flex items-center gap-5">
-          <button
-            aria-label="Search"
-            className="text-[#8C8680] hover:text-[#B8975A] transition-colors duration-300"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <circle cx="11" cy="11" r="8" />
-              <path d="m21 21-4.35-4.35" />
-            </svg>
-          </button>
-          <button
-            aria-label="Shopping bag"
-            className="text-[#8C8680] hover:text-[#B8975A] transition-colors duration-300 relative"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-              <line x1="3" y1="6" x2="21" y2="6" />
-              <path d="M16 10a4 4 0 0 1-8 0" />
-            </svg>
-            <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#B8975A] text-white text-[9px] rounded-full flex items-center justify-center font-medium">
-              0
-            </span>
-          </button>
+          <Link href="/orders">
+            <Package className="w-5 h-5 text-[#8C8680] hover:text-[#B8975A] transition-colors duration-300 cursor-pointer" />
+          </Link>
         </div>
 
         {/* Mobile hamburger */}
@@ -150,6 +141,16 @@ export default function Navigation() {
               className="text-[#1C1C1A] hover:text-[#B8975A] transition-colors"
             >
               Bracelets
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/orders"
+              onClick={() => setMenuOpen(false)}
+              className="text-[#1C1C1A] hover:text-[#B8975A] transition-colors flex items-center gap-2"
+            >
+              <Package className="w-4 h-4" />
+              Order History
             </Link>
           </li>
           <li>

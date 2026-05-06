@@ -9,16 +9,27 @@ export const getSupabase = () => {
   if (supabaseClient) {
     return supabaseClient
   }
+  // During build/SSR or when env vars aren't available,
+  // we don't want to throw errors
+  if (typeof window === 'undefined' && (!supabaseUrl || !supabaseAnonKey)) {
+    // Return a minimal mock client that won't throw
+    supabaseClient = {
+      from: (_table: string) => ({
+        select: () => ({ execute: async () => ({ data: [], error: null }) }),
+        insert: () => ({ execute: async () => ({ data: [], error: null }) }),
+        update: () => ({ execute: async () => ({ data: [], error: null }) }),
+        delete: () => ({ execute: async () => ({ data: [], error: null }) }),
+        eq: () => ({ execute: async () => ({ data: [], error: null }) }),
+        order: () => ({ execute: async () => ({ data: [], error: null }) }),
+      }),
+    } as any
+    return supabaseClient
+  }
+  // Missing URL/key at runtime - create with placeholder
   if (!supabaseUrl || !supabaseAnonKey) {
-    // Return a mock client during build when env vars aren't available
     supabaseClient = createClient(
       'https://placeholder.supabase.co',
-      'placeholder-anon-key',
-      {
-        global: {
-          headers: {},
-        },
-      }
+      'placeholder-anon-key'
     )
     return supabaseClient
   }
@@ -26,5 +37,5 @@ export const getSupabase = () => {
   return supabaseClient
 }
 
-// Legacy export for backwards compatibility
-export const supabase = getSupabase()
+// Legacy export - only used in browser context
+export const supabase = typeof window !== 'undefined' ? getSupabase() : ({} as any)

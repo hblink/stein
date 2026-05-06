@@ -408,6 +408,31 @@ Or manually review and fix reported issues.
 | `NEXT_PUBLIC_SUPABASE_URL` | Yes | Your Supabase project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Your Supabase anon/public key |
 
+## 🛠️ Admin Panel (Easy Product Management)
+
+No coding needed! Manage products through a web interface:
+
+1. **Go to `/admin/products`** in your browser (when logged in/authenticated)
+2. **Add Product** — Click "Add Product" and fill the form
+3. **Edit** — Click ✏️ on any product
+4. **Delete** — Click 🗑️ to remove
+
+### What You Can Change
+
+- ✏️ **Name & Description** — Product titles and details
+- 💰 **Pricing** — Regular and sale prices
+- 📦 **Stock** — Inventory count
+- 🖼️ **Images** — URLs for 4 views (Studio/Detail/Styled/Worn)
+- 🏷️ **Tags** — Filter badges (e.g., "Gold", "Gemstone")
+- 📏 **Sizes** — Available sizes for bracelets
+- ⭐ **Badges** — "New Arrival" / "Bestseller" toggles
+- 🔘 **Active** — Show/hide from storefront
+- 🔢 **Sort Order** — Display sequence (lower = first)
+
+### Changes Are Instant
+
+All edits save directly to Supabase and appear immediately on the site. No rebuild needed!
+
 ## 📚 Resources
 
 - [Next.js Documentation](https://nextjs.org/docs)
@@ -415,34 +440,44 @@ Or manually review and fix reported issues.
 - [Tailwind CSS Documentation](https://tailwindcss.com/docs)
 - [TypeScript Documentation](https://www.typescriptlang.org/docs/)
 
-## 🛡️ Security
+## 🖼️ Adding Real Product Photos
 
-- **Never commit secrets**: `.env.local` is in `.gitignore`
-- **Use Row Level Security (RLS)** on Supabase tables
-- **Sanitize user inputs** on all forms
-- **Validate API requests** with proper authorization
+Currently uses CSS gradient placeholders. To add real photos:
 
-## 🤝 Contributing
+1. **Upload images** to your CDN or `public/images/products/`
+2. **Get the URLs** (e.g., `https://cdn.example.com/ring-gold-studio.jpg`)
+3. **In the Admin Panel**, paste URLs into the 4 image fields:
+   - Studio (main product shot)
+   - Detail (close-up)
+   - Styled (lifestyle)
+   - Worn (on-body)
+4. **Save** — Changes appear immediately!
 
-1. Fork the repository
-2. Create feature branch: `git checkout -b feature/new-feature`
-3. Commit changes: `git commit -m 'Add new feature'`
-4. Push to branch: `git push origin feature/new-feature`
-5. Open Pull Request
+### Image Specs
+- **Aspect Ratio**: 4:5 (portrait)
+- **Size**: 800×1000px recommended (2x for retina)
+- **Format**: WebP/JPG/PNG
+- **Naming**: `product-name-view.jpg` (e.g., `golden-harmony-studio.jpg`)
 
-## 📄 License
+## 🖥️ Development: Adding Products via Code
 
-This project is proprietary and confidential. Unauthorized use, copying, or distribution is prohibited.
+For developers, products can also be added in `src/data/products.ts`:
 
-## 🆘 Support
+```typescript
+{
+  id: 'unique-id',
+  name: 'Product Name',
+  description: 'Full description...',
+  short_description: 'Brief description',
+  price: 285,
+  category: 'necklaces',
+  collection: 'modern',
+  stockCount: 5,
+  gallery: [gradient1, gradient2, gradient3, gradient4],
+  imageColor: gradient1,
+  tags: ['Gold', 'Gemstone'],
+  sizes: undefined,
+}
+```
 
-For issues, questions, or feature requests:
-- Check existing [issues](https://github.com/your-repo/issues)
-- Open a new issue with detailed description
-- Contact the development team
-
----
-
-**Last Updated**: May 2026  
-**Version**: 1.2  
-**Built with**: ❤️ + Next.js + TypeScript + Tailwind CSS
+Then run `bun run build` to regenerate static pages.

@@ -34,7 +34,7 @@ export default function OrdersPage() {
       setLoading(true)
       setError(null)
 
-      const { data, error: supabaseError } = await getSupabase()
+      const { data, error: supabaseError } = await getSupabase()!
         .from('orders')
         .select('*')
         .order('created_at', { ascending: false })
@@ -88,7 +88,7 @@ export default function OrdersPage() {
 
   const fetchOrderItems = async (orderId: string): Promise<OrderItem[]> => {
     try {
-      const { data, error } = await getSupabase()
+      const { data, error } = await getSupabase()!
         .from('order_items')
         .select('*')
         .eq('order_id', orderId)

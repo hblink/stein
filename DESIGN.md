@@ -219,41 +219,104 @@ All icons are inline SVG, drawn with:
 - Bespoke CTABanner (light variant)
 - NewsletterSection + Footer
 
-### ProductDetailPage _(updated: full redesign — v1.2)_
-`"use client"` — manages all interactive state locally
+### ProductDetailPage _(updated: full redesign — v1.2)_  
+`"use client"` — manages all interactive state locally  
 
-**Layout:** `grid-cols-1 lg:grid-cols-[1fr_1px_1fr]` — image gallery | vertical divider | purchase info
+**Layout:** `grid-cols-1 lg:grid-cols-[1fr_1px_1fr]` — image gallery | vertical divider | purchase info  
 
-#### Left column — Image Gallery
-- **Main image:** 4:5 aspect ratio, CSS gradient (from `product.gallery[]`), cross-fade on thumbnail click (500ms)
-- **View label** overlay bottom-left (Studio / Detail / Styled / Worn)
-- **Badges** top-left: New, Bestseller, Sale
-- **Prev/Next arrows** overlaid on image (white/80 backdrop-blur squares, 8×8)
-- **Thumbnail strip:** `grid-cols-4 gap-2`, 1:1 square, gold ring + ring-offset on active thumbnail, view label at bottom of each
-- **Share row** below thumbnails: "Share" label + Facebook / Pinterest / Twitter icon buttons (border squares)
+#### Left column — Image Gallery  
+- **Main image:** 4:5 aspect ratio, CSS gradient (from `product.gallery[]`), cross-fade on thumbnail click (500ms)  
+- **View label** overlay bottom-left (Studio / Detail / Styled / Worn)  
+- **Badges** top-left: New, Bestseller, Sale  
+- **Prev/Next arrows** overlaid on image (white/80 backdrop-blur squares, 8×8)  
+- **Thumbnail strip:** `grid-cols-4 gap-2`, 1:1 square, gold ring + ring-offset on active thumbnail, view label at bottom of each  
+- **Share row** below thumbnails: "Share" label + Facebook / Pinterest / Twitter icon buttons (border squares)  
 
-#### Right column — Purchase Info
-| Element | Detail |
+#### Right column — Purchase Info  
+| Element | Detail |  
+|---|---|  
+| Collection tag | Links to filtered collection page |  
+| H1 product name | Playfair Display 400, 3xl–4xl |  
+| Subtitle | Inter, muted stone colour |  
+| Price | Playfair Display 3xl; sale price struck through; savings label in gold |  
+| Short description | 1-sentence hook, border-bottom separator |  
+| Stock indicator | Coloured dot + text: in stock / only N left / out of stock |  
+| Size selector | Visible only if `product.sizes` exists; active = forest bg; size guide link |  
+| Quantity stepper | −/qty/+ in bordered box, capped to `stockCount` |  
+| Add to Bag button | `flex-1`, warm-black → forest on hover; confirmed state (checkmark + "Added to Bag"); disabled + grey if out of stock |  
+| Wishlist button | Heart outline → filled gold on toggle |  
+| Ask a Question | Full-width secondary button, border style |  
+| Trust strip | 3-up: Free Delivery / 30-Day Returns / Lifetime Care |  
+| **Tabs** | Description \| Materials & Care \| Shipping & Returns |  
+| → Description tab | Long description, dimensions block, tag pills, SKU + category link |  
+| → Materials & Care tab | Bulleted materials list, care instructions, sustainability callout box |  
+| → Shipping & Returns tab | Dispatch times, 4 delivery options with prices, returns policy |  
+| Maker bio | Avatar circle, studio name + location, bio paragraph, "Meet the maker" link |  
+
+**Related products** — 4-up grid below in cream-dark section, same collection  
+
+---
+
+## Order Dashboard Components (v1.3)
+
+### OrderDashboard (`/orders` page)
+`"use client"` — fetches from Supabase orders + order_items tables
+
+- **Stats Row:** 5 metric cards (Total Orders, Revenue, Pending, Delivered, Cancelled)
+- **Filters Bar:** Search input, Order Status dropdown, Payment Status dropdown, View toggle (Table/Cards), Sort controls
+- **Results count:** "Showing X of Y orders"
+- **Dual view modes:**
+  - **Table view** (desktop): Full-width table with pagination-style layout
+  - **Card view** (mobile): Stacked cards with condensed info
+- **OrderDetailModal:** Click any order to see full breakdown
+- **Status badges:** Color-coded for order/payment/fulfillment states
+
+### OrderTable (desktop)
+| Column | Content |
 |---|---|
-| Collection tag | Links to filtered collection page |
-| H1 product name | Playfair Display 400, 3xl–4xl |
-| Subtitle | Inter, muted stone colour |
-| Price | Playfair Display 3xl; sale price struck through; savings label in gold |
-| Short description | 1-sentence hook, border-bottom separator |
-| Stock indicator | Coloured dot + text: in stock / only N left / out of stock |
-| Size selector | Visible only if `product.sizes` exists; active = forest bg; size guide link |
-| Quantity stepper | −/qty/+ in bordered box, capped to `stockCount` |
-| Add to Bag button | `flex-1`, warm-black → forest on hover; confirmed state (checkmark + "Added to Bag"); disabled + grey if out of stock |
-| Wishlist button | Heart outline → filled gold on toggle |
-| Ask a Question | Full-width secondary button, border style |
-| Trust strip | 3-up: Free Delivery / 30-Day Returns / Lifetime Care |
-| **Tabs** | Description \| Materials & Care \| Shipping & Returns |
-| → Description tab | Long description, dimensions block, tag pills, SKU + category link |
-| → Materials & Care tab | Bulleted materials list, care instructions, sustainability callout box |
-| → Shipping & Returns tab | Dispatch times, 4 delivery options with prices, returns policy |
-| Maker bio | Avatar circle, studio name + location, bio paragraph, "Meet the maker" link |
+| Order | Order # + date |
+| Customer | Name + email |
+| Items | Count of line items |
+| Total | Formatted currency |
+| Status | 3 badges (order/payment/fulfillment) |
+| Delivery | Estimated date with clock icon |
+| Actions | "View" button |
 
-**Related products** — 4-up grid below in cream-dark section, same collection
+### OrderCard (mobile grid)
+- Compact vertical layout
+- Top: Order # + date + total
+- Middle: Status badges row, items preview (3 max, +N more)
+- Delivery: Est. date pill + tracking pill (if available)
+- Bottom: "View Details" CTA
+
+### OrderStatusBadge (shared)
+3 variants, each with 5 states:
+- **OrderStatusBadge:** pending(gold) | processing(blue) | shipped(purple) | delivered(green) | cancelled(rose)
+- **PaymentStatusBadge:** pending(gold) | paid(green) | failed(rose) | refunded(slate)
+- **FulfillmentStatusBadge:** unfulfilled(gold) | partial(blue) | fulfilled(green) | cancelled(rose)
+
+Sizes: `sm` (px-2 py-0.5 text-xs) and `md` (px-3 py-1 text-sm)
+
+### OrderDetailsModal
+- **Header:** Order # + close button
+- **Status badges row**
+- **Tracking section** (if tracking # or est. delivery exists)
+- **Items list:** Each item with thumbnail, name, qty, unit price, total
+- **Addresses:** Shipping (full) + Billing side-by-side on desktop, stacked on mobile
+- **Order Summary:** Subtotal, tax, shipping, discount, total breakdown
+- **Metadata:** Created/updated timestamps, notes section
+- **Footer:** Close button
+
+### Icons Used
+- Package (Order header, nav icon)
+- Truck (Tracking section)
+- MapPin (Addresses)
+- CreditCard (Billing address)
+- Calendar (Dates)
+- Tag (Tracking number)
+- Info (Order summary)
+- X (Close modal)
+- Search, Filter, SlidersHorizontal, List, LayoutGrid, ArrowUpDown (Controls)
 
 ---
 

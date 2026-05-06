@@ -6,12 +6,13 @@
 
 ### Changelog
 
-| Version | Date | Changes |
+ | Version | Date | Changes |
 |---|---|---|
 | 1.0 | May 2026 | Initial build — all pages, components, product data |
 | 1.1 | May 2026 | Bug fix: `"use client"` added to `ProductCard` (onClick handler) |
 | 1.1 | May 2026 | Bug fix: Hero section invisible before hydration — rewrote as `SlideVisual` component, added explicit `backgroundColor` on `<section>` |
 | 1.2 | May 2026 | Hero redesigned as 3-slide auto-advancing slider; Product detail page fully rebuilt with gallery, tabs, stock indicator, qty stepper, size selector, wishlist toggle, share buttons, maker bio |
+| 1.3 | May 2026 | **NEW**: Customer order dashboard with Supabase integration — order history, status tracking, estimated delivery, detailed order view, search, filter, sort, and dual view modes (table & card grid) |
 
 ---
 
@@ -211,9 +212,29 @@ Two-column `[1fr 1px 1fr]` on desktop with a visible blush-coloured vertical div
 
 ---
 
-### 5.5 404 Page `/not-found`
+### 5.6 Order Dashboard `/orders` _(NEW: v1.3)_
 
-Brand-consistent 404 with editorial copy ("This piece has moved on") and two recovery CTAs: Return Home + Shop Collection.
+**Purpose:** Customer order history and tracking with Supabase backend  
+**Conversion goal:** Reduce customer anxiety, increase trust and repeat purchase  
+
+| # | Feature | Detail |
+|---|---|---|
+| 1 | Order List | All orders from Supabase `orders` table, sortable and filterable |
+| 2 | Search | By order number, email, customer name, status |
+| 3 | Filters | By order status (pending/processing/shipped/delivered/cancelled) and payment status (paid/pending/failed/refunded) |
+| 4 | Sort | By date (asc/desc) or by total amount (asc/desc) |
+| 5 | Stats Cards | Total orders, total revenue, pending count, delivered count, cancelled count |
+| 6 | Dual View | Table view (desktop) and card grid view (mobile) |
+| 7 | Detail Modal | Click any order to see full details: items, addresses, tracking, status badges |
+| 8 | Status Badges | Color-coded badges for order, payment, and fulfillment status |
+| 9 | Tracking | Displays tracking number and estimated delivery date when available |
+| 10 | Itemized List | Shows up to 3 items per order with quantity and price |
+
+**Supabase Integration:**
+- Real-time data fetched from Supabase `orders` and `order_items` tables
+- Row Level Security (RLS) enforced — authenticated users see only their orders
+- Schema includes fields for order status, payment status, fulfillment, addresses, tracking, and financial totals
+- Sample data SQL provided in `supabase/orders_schema.sql`
 
 ---
 
@@ -221,6 +242,7 @@ Brand-consistent 404 with editorial copy ("This piece has moved on") and two rec
 
 ```
 /                                    Homepage (with hero slider)
+/orders                              Order Dashboard
 /collections/necklaces               Necklaces collection
 /collections/bracelets               Bracelets collection
 /collections/necklaces/[slug]        Necklace product detail
@@ -230,6 +252,7 @@ Brand-consistent 404 with editorial copy ("This piece has moved on") and two rec
 **Navigation bar links:**
 - Necklaces → `/collections/necklaces`
 - Bracelets → `/collections/bracelets`
+- Orders → `/orders` (with Package icon)
 - Collections → `/#collections`
 - Our Story → `/#our-story`
 
@@ -356,10 +379,11 @@ Each product has two description layers:
 ## 10. Roadmap
 
 ### Phase 2 — Commerce Infrastructure
+- [x] **Order Dashboard** — Customer order history with Supabase integration (v1.3)
 - [ ] Real product photography (4 angles per product — maps directly to `gallery[]` array)
 - [ ] Shopping cart (drawer or page)
 - [ ] Checkout flow with payment processing (Stripe)
-- [ ] User accounts / order history
+- [ ] User accounts / order history (with authentication)
 - [ ] Wishlist persistence (localStorage or account-linked)
 - [ ] Size guide modal/page
 
